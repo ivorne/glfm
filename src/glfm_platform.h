@@ -44,6 +44,7 @@ struct GLFMDisplay {
     // Callbacks
     GLFMMainLoopFunc mainLoopFunc;
     GLFMTouchFunc touchFunc;
+    GLFMEmscriptenKeyFunc emscriptenKeyFunc;
     GLFMKeyFunc keyFunc;
     GLFMCharFunc charFunc;
     GLFMSurfaceErrorFunc surfaceErrorFunc;
@@ -144,6 +145,12 @@ void glfmSetKeyboardVisibilityChangedFunc(GLFMDisplay *display,
 void glfmSetTouchFunc(GLFMDisplay *display, GLFMTouchFunc touchFunc) {
     if (display) {
         display->touchFunc = touchFunc;
+    }
+}
+
+void glfmSetEmscriptenKeyFunc(GLFMDisplay *display, GLFMEmscriptenKeyFunc keyFunc){
+    if (display) {
+        display->emscriptenKeyFunc = keyFunc;
     }
 }
 

@@ -216,6 +216,11 @@ typedef bool (*GLFMTouchFunc)(GLFMDisplay *display, int touch, GLFMTouchPhase ph
 typedef bool (*GLFMKeyFunc)(GLFMDisplay *display, GLFMKey keyCode, GLFMKeyAction action,
                             int modifiers);
 
+/// This is called only on Emscripten platform after GLFMKeyFunc if it returned false.
+/// Is not called on any other platform.
+typedef bool (*GLFMEmscriptenKeyFunc)(GLFMDisplay *display, const char *code, GLFMKeyAction action,
+                            int modifiers);
+
 /// Callback function for character input events.
 typedef void (*GLFMCharFunc)(GLFMDisplay *display, const char *utf8, int modifiers);
 
@@ -320,6 +325,9 @@ void glfmSetTouchFunc(GLFMDisplay *display, GLFMTouchFunc touchFunc);
 /// Note, on iOS, only pressed events are sent (no repeated or released events) and with no
 /// modifiers.
 void glfmSetKeyFunc(GLFMDisplay *display, GLFMKeyFunc keyFunc);
+
+///
+void glfmSetEmscriptenKeyFunc(GLFMDisplay *display, GLFMEmscriptenKeyFunc keyFunc);
 
 /// Sets the function to call when character input events occur.
 void glfmSetCharFunc(GLFMDisplay *display, GLFMCharFunc charFunc);

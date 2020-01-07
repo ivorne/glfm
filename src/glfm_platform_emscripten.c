@@ -297,28 +297,30 @@ static EM_BOOL _glfmVisibilityChangeCallback(int eventType,
 }
 
 static EM_BOOL _glfmKeyCallback(int eventType, const EmscriptenKeyboardEvent *e, void *userData) {
+    // GLFMCharFunc
     GLFMDisplay *display = userData;
     if (eventType == EMSCRIPTEN_EVENT_KEYPRESS) {
         if (display->charFunc && e->charCode >= ' ') {
             display->charFunc(display, e->key, 0);
         }
-        return 1;
     }
-    // Prevent change of focus via tab key
-    EM_BOOL handled = e->keyCode == '\t';
-    if (display->keyFunc) {
-        GLFMKeyAction action;
-        if (eventType == EMSCRIPTEN_EVENT_KEYDOWN) {
-            if (e->repeat) {
-                action = GLFMKeyActionRepeated;
-            } else {
-                action = GLFMKeyActionPressed;
-            }
-        } else if (eventType == EMSCRIPTEN_EVENT_KEYUP) {
-            action = GLFMKeyActionReleased;
+    
+    // key action
+    GLFMKeyAction action;
+    if (eventType == EMSCRIPTEN_EVENT_KEYDOWN) {
+        if (e->repeat) {
+            action = GLFMKeyActionRepeated;
         } else {
-            return 0;
+            action = GLFMKeyActionPressed;
         }
+    } else if (eventType == EMSCRIPTEN_EVENT_KEYUP) {
+        action = GLFMKeyActionReleased;
+    } else {
+        return 0;
+    }
+    
+    // GLFMKeyFunc
+    if (display->keyFunc) {
 
         /*
          TODO: Modifiers
@@ -334,10 +336,24 @@ static EM_BOOL _glfmKeyCallback(int eventType, const EmscriptenKeyboardEvent *e,
          GLFMKeyDown      = 0x28,
          */
 
-        return display->keyFunc(display, e->keyCode, action, 0) || handled;
-    } else {
-        return handled;
+        if (display->keyFunc(display, e->keyCode, action, 0)) {
+            return 1;
+        }
+    } 
+    
+    // GLFMEmscriptenKeyFunc
+    if (display->emscriptenKeyFunc) {
+        if (display->emscriptenKeyFunc(display, e->code, action, 0)) {
+            return 1;
+        }
     }
+    
+    // Prevent change of focus via tab key
+    if (e->keyCode == '\t') {
+        return 1;
+    }
+    
+    return 0;
 }
 
 static EM_BOOL _glfmMouseCallback(int eventType, const EmscriptenMouseEvent *e, void *userData) {
