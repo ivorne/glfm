@@ -1,7 +1,7 @@
 /*
  GLFM
  https://github.com/brackeen/glfm
- Copyright (c) 2014-2017 David Brackeen
+ Copyright (c) 2014-2020 David Brackeen
  
  This software is provided 'as-is', without any express or implied warranty.
  In no event will the authors be held liable for any damages arising from the
@@ -102,6 +102,7 @@ typedef enum {
     GLFMRenderingAPIOpenGLES3,
     GLFMRenderingAPIOpenGLES31,
     GLFMRenderingAPIOpenGLES32,
+    GLFMRenderingAPIMetal,
 } GLFMRenderingAPI;
 
 typedef enum {
@@ -361,6 +362,15 @@ bool glfmIsKeyboardVisible(GLFMDisplay *display);
 /// Sets the function to call when the virtual keyboard changes visibility or changes bounds.
 void glfmSetKeyboardVisibilityChangedFunc(GLFMDisplay *display,
                                           GLFMKeyboardVisibilityChangedFunc visibilityChangedFunc);
+
+// MARK: Platform-specific functions
+
+/// Returns true if this is an iOS device that supports Metal, false otherwise
+bool glfmIsMetalSupported(GLFMDisplay *display);
+
+/// Returns a (MTKView *) instance, or NULL if Metal is not available.
+/// This will only return a valid reference after the surface was created.
+void *glfmGetMetalView(GLFMDisplay *display);
 
 #if defined(GLFM_PLATFORM_ANDROID)
 
