@@ -513,7 +513,7 @@ int main() {
     attribs.antialias = glfmDisplay->multisample != GLFMMultisampleNone;
     attribs.premultipliedAlpha = 1;
     attribs.preserveDrawingBuffer = 0;
-    attribs.preferLowPowerToHighPerformance = 0;
+    attribs.powerPreference = EM_WEBGL_POWER_PREFERENCE_DEFAULT;
     attribs.failIfMajorPerformanceCaveat = 0;
     attribs.enableExtensionsByDefault = 0;
 
